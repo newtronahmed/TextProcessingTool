@@ -12,16 +12,15 @@ import java.util.regex.Pattern;
 
 public class MainController {
     @FXML
+//    public TextArea inputTextArea;
+    public TextArea inputTextArea;
+    @FXML
     private Label welcomeText;
 
     @FXML
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
-
     }
-
-    @FXML
-    private TextArea inputTextArea;
 
     @FXML
     private TextField regexField;
@@ -53,7 +52,7 @@ public class MainController {
         String regex = regexField.getText();
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(inputText);
-        resultListView.getItems().clear();
+//        resultListView.getItems().clear();
 
         while (matcher.find()) {
             resultListView.getItems().add("Match: " + matcher.group() + " at positions " + matcher.start() + " - " + matcher.end());

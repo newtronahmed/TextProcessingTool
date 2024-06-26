@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.textprocesstool.MainController" spacing="10" alignment="TOP_CENTER" padding="10">
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.textprocesstool.MainController" spacing="10" alignment="TOP_CENTER" >
     <TextArea fx:id="inputTextArea" prefHeight="200" prefWidth="400" promptText="Enter your text here..."/>
-    <HBox spacing="10">
+    <HBox >
         <Label text="Regex:"/>
         <TextField fx:id="regexField" promptText="Enter regex pattern"/>
     </HBox>
-    <HBox spacing="10">
+    <HBox >
         <Label text="Replacement:"/>
         <TextField fx:id="replacementField" promptText="Enter replacement text"/>
     </HBox>
-    <HBox spacing="10">
+    <HBox >
         <Button fx:id="matchButton" text="Match"/>
         <Button fx:id="replaceButton" text="Replace"/>
         <Button fx:id="collectionButton" text="Collection Operation"/>

@@ -2,25 +2,14 @@ package com.example.textprocesstool;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainController {
-    @FXML
-//    public TextArea inputTextArea;
-    public TextArea inputTextArea;
-    @FXML
-    private Label welcomeText;
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
+    private TextArea inputTextArea;
 
     @FXML
     private TextField regexField;
@@ -33,6 +22,8 @@ public class MainController {
 
     @FXML
     private Button replaceButton;
+    @FXML
+    private Button searchButton;
 
     @FXML
     private Button collectionButton;
@@ -41,10 +32,19 @@ public class MainController {
     private ListView<String> resultListView;
 
     @FXML
+    private Label uniqueWordsCountLabel;
+
+    @FXML
+    private Label totalWordsCountLabel;
+
+    @FXML
     void initialize() {
         matchButton.setOnAction(event -> matchRegex());
         replaceButton.setOnAction(event -> replaceRegex());
         collectionButton.setOnAction(event -> manipulateCollection());
+
+        // Add a listener to the inputTextArea to update word counts in real-time
+        inputTextArea.textProperty().addListener((observable, oldValue, newValue) -> updateCounts(newValue));
     }
 
     private void matchRegex() {
@@ -52,7 +52,7 @@ public class MainController {
         String regex = regexField.getText();
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(inputText);
-//        resultListView.getItems().clear();
+        resultListView.getItems().clear();
 
         while (matcher.find()) {
             resultListView.getItems().add("Match: " + matcher.group() + " at positions " + matcher.start() + " - " + matcher.end());
@@ -69,11 +69,42 @@ public class MainController {
     }
 
     private void manipulateCollection() {
-        // Example: Using a HashSet to remove duplicates
         String inputText = inputTextArea.getText();
         List<String> words = Arrays.asList(inputText.split("\\s+"));
         Set<String> uniqueWords = new HashSet<>(words);
         resultListView.getItems().clear();
         resultListView.getItems().add("Unique words: " + uniqueWords);
+    }
+
+    private void updateCounts(String newText) {
+        String[] words = newText.split("\\s+");
+        updateUniqueWordsCount(words);
+        updateWordCount (words);
+    }
+    private void searchRegex() {
+        String inputText = inputTextArea.getText();
+        String regex = regexField.getText();
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(inputText);
+        resultListView.getItems().clear();
+
+        while (matcher.find()) {
+            resultListView.getItems().add("Found: " + matcher.group() + " at positions " + matcher.start() + " - " + matcher.end());
+        }
+    }
+    private void updateWordCount(String[] words){
+        long totalWords = Arrays.stream(words)
+                .filter(word -> !word.isEmpty())
+                .count();
+        totalWordsCountLabel.setText(String.valueOf(totalWords));
+    }
+    private void updateUniqueWordsCount(String[] words) {
+        // Update unique words count
+        String [] filteredWords = Arrays.stream(words)
+                .map(word -> word.replaceAll("[^a-z]", ""))
+                .filter(word -> !word.isEmpty())
+                .toArray(String[]::new);
+        Set<String> uniqueWords = new HashSet<>(Arrays.asList(filteredWords));
+        uniqueWordsCountLabel.setText(String.valueOf(uniqueWords.size()));
     }
 }

@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.TreeMap;
 
 public class MainApplication extends Application {
     @Override
@@ -18,6 +19,6 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+       launch(args);
     }
 }

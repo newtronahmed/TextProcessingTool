@@ -93,15 +93,18 @@ public class MainController {
         }
     }
     private void updateWordCount(String[] words){
+        //get total words(alphanumeric) in text
         long totalWords = Arrays.stream(words)
+                .map(word -> word.replaceAll("[^a-zA-Z0-9]", ""))
                 .filter(word -> !word.isEmpty())
                 .count();
         totalWordsCountLabel.setText(String.valueOf(totalWords));
+//        totalWordsCountLabel.setText(String.valueOf(totalWords));
     }
     private void updateUniqueWordsCount(String[] words) {
         // Update unique words count
         String [] filteredWords = Arrays.stream(words)
-                .map(word -> word.replaceAll("[^a-z]", ""))
+                .map(word -> word.replaceAll("[^a-zA-Z0-9]", ""))
                 .filter(word -> !word.isEmpty())
                 .toArray(String[]::new);
         Set<String> uniqueWords = new HashSet<>(Arrays.asList(filteredWords));

@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class MainController {
 
@@ -96,14 +97,39 @@ public class MainController {
     @FXML
     private void searchRegex() {
         String inputText = inputTextArea.getText();
-        String regex = regexField.getText();
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(inputText);
-        resultListView.getItems().clear();
+        String regex = regexField.getText().trim();  // Trim whitespace
 
-        while (matcher.find()) {
-            resultListView.getItems().add("Found: " + matcher.group() + " at positions " + matcher.start() + " - " + matcher.end());
+        if (regex.isEmpty()) {
+            // Show an alert or update a status label
+            showAlert("Error", "Empty Regex", "Please enter a regular expression to search.");
+            return;
         }
+
+        try {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(inputText);
+            resultListView.getItems().clear();
+
+            boolean found = false;
+            while (matcher.find()) {
+                resultListView.getItems().add("Found: " + matcher.group() + " at positions " + matcher.start() + " - " + matcher.end());
+                found = true;
+            }
+
+            if (!found) {
+                resultListView.getItems().add("No matches found.");
+            }
+        } catch (PatternSyntaxException e) {
+            showAlert("Error", "Invalid Regex", "The entered regular expression is invalid: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
     private void updateWordCount(String[] words){
         //get total words(alphanumeric) in text

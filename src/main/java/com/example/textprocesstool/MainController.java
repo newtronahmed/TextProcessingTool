@@ -2,12 +2,18 @@ package com.example.textprocesstool;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.stage.FileChooser;
+
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainController {
 
+    public Button uploadButton;
     @FXML
     private TextArea inputTextArea;
 
@@ -42,11 +48,15 @@ public class MainController {
         matchButton.setOnAction(event -> matchRegex());
         replaceButton.setOnAction(event -> replaceRegex());
         collectionButton.setOnAction(event -> manipulateCollection());
-
+// Enable drag-and-drop for TextArea
+        enableDragAndDrop();
+        searchButton.setOnAction(event -> searchRegex());
+        uploadButton.setOnAction(event -> uploadFile());
         // Add a listener to the inputTextArea to update word counts in real-time
         inputTextArea.textProperty().addListener((observable, oldValue, newValue) -> updateCounts(newValue));
     }
 
+    @FXML
     private void matchRegex() {
         String inputText = inputTextArea.getText();
         String regex = regexField.getText();
@@ -59,6 +69,7 @@ public class MainController {
         }
     }
 
+    @FXML
     private void replaceRegex() {
         String inputText = inputTextArea.getText();
         String regex = regexField.getText();
@@ -68,6 +79,7 @@ public class MainController {
         resultListView.getItems().add("Result: " + result);
     }
 
+    @FXML
     private void manipulateCollection() {
         String inputText = inputTextArea.getText();
         List<String> words = Arrays.asList(inputText.split("\\s+"));
@@ -81,6 +93,7 @@ public class MainController {
         updateUniqueWordsCount(words);
         updateWordCount (words);
     }
+    @FXML
     private void searchRegex() {
         String inputText = inputTextArea.getText();
         String regex = regexField.getText();
@@ -109,5 +122,63 @@ public class MainController {
                 .toArray(String[]::new);
         Set<String> uniqueWords = new HashSet<>(Arrays.asList(filteredWords));
         uniqueWordsCountLabel.setText(String.valueOf(uniqueWords.size()));
+    }
+    @FXML
+    // Drag-and-drop functionality for TextArea
+    private void enableDragAndDrop() {
+        inputTextArea.setOnDragOver(event -> {
+            if (event.getGestureSource() != inputTextArea && event.getDragboard().hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        });
+
+        inputTextArea.setOnDragDropped(event -> {
+            Dragboard dragboard = event.getDragboard();
+            boolean success = false;
+            if (dragboard.hasFiles()) {
+                File file = dragboard.getFiles().get(0);
+                if (file.getName().toLowerCase().endsWith(".txt")) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                        StringBuilder content = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            content.append(line).append("\n");
+                        }
+                        inputTextArea.setText(content.toString().trim());
+                        success = true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+    }
+    @FXML
+    private void uploadFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Upload Text File");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(null);
+
+        if (file != null) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line).append("\n");
+                }
+                inputTextArea.setText(content.toString().trim());
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("File Error");
+                alert.setHeaderText("Error loading file");
+                alert.setContentText("An error occurred while reading the file.");
+                alert.showAndWait();
+            }
+        }
     }
 }

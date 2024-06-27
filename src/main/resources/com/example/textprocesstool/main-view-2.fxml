@@ -2,9 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.stage.FileChooser?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.textprocesstool.MainController" alignment="TOP_CENTER" spacing="10.0" >
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.textprocesstool.MainController" spacing="10" alignment="TOP_CENTER" padding="20">
 
     <!-- Header -->
     <Label text="Text Processing Tool" style="-fx-font-size: 20px;"/>
@@ -14,8 +16,14 @@
         <Label text="Drag and drop a .txt file here or click below to upload:"/>
         <TextArea fx:id="inputTextArea" prefHeight="300" prefWidth="600" promptText="Drop or upload text here...">
             <VBox.margin>
-                <Insets bottom="10.0"/>
+                <Insets bottom="10"/>
             </VBox.margin>
+            <TextArea.setOnDragOver>
+                <EventHandler<DragEvent> onDragOver="#dragOver">
+            </TextArea.setOnDragOver>
+            <TextArea.setOnDragDropped>
+                <EventHandler<DragEvent> onDragDropped="#dragDropped">
+            </TextArea.setOnDragDropped>
         </TextArea>
         <Button fx:id="uploadButton" text="Upload File" onAction="#uploadFile"/>
     </VBox>

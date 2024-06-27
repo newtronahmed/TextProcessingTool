@@ -199,11 +199,8 @@ public class MainController {
                 }
                 inputTextArea.setText(content.toString().trim());
             } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("File Error");
-                alert.setHeaderText("Error loading file");
-                alert.setContentText("An error occurred while reading the file.");
-                alert.showAndWait();
+//
+                showAlert("File Error", "Error loading file", "An error occurred while reading the file.");
             }
         }
     }

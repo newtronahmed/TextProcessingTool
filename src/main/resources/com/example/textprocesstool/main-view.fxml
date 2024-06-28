@@ -23,9 +23,9 @@
     <!-- Buttons for actions -->
     <HBox spacing="10" alignment="CENTER">
         <Button fx:id="matchButton" text="Match Regex" onAction="#matchRegex"/>
+        <Button fx:id="searchButton" text="Search" onAction="#searchRegex"/>
         <Button fx:id="replaceButton" text="Replace Regex" onAction="#replaceRegex"/>
         <Button fx:id="collectionButton" text="Collection Operation" onAction="#manipulateCollection"/>
-        <Button fx:id="searchButton" text="Search" onAction="#searchRegex"/>
     </HBox>
 
     <!-- Regex and Replacement fields -->

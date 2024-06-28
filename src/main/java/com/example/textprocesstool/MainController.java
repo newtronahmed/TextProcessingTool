@@ -64,10 +64,9 @@ public class MainController {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(inputText);
         resultListView.getItems().clear();
+        boolean matches = matcher.matches();
+        resultListView.getItems().add("Matches entire input: " + matches);
 
-        while (matcher.find()) {
-            resultListView.getItems().add("Match: " + matcher.group() + " at positions " + matcher.start() + " - " + matcher.end());
-        }
     }
 
     @FXML

@@ -61,8 +61,8 @@ public class MainController {
     private void matchRegex() {
         String inputText = inputTextArea.getText();
         String regex = regexField.getText();
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(inputText);
+        Regex regexTool = new Regex(inputText, regex);
+        Matcher matcher = regexTool.matcher();
         resultListView.getItems().clear();
         boolean matches = matcher.matches();
         resultListView.getItems().add("Matches entire input: " + matches);
@@ -74,7 +74,8 @@ public class MainController {
         String inputText = inputTextArea.getText();
         String regex = regexField.getText();
         String replacement = replacementField.getText();
-        String result = inputText.replaceAll(regex, replacement);
+        Regex regexTool = new Regex(inputText, regex, replacement);
+        String result = regexTool.replaceRegex();
         resultListView.getItems().clear();
         resultListView.getItems().add("Result: " + result);
     }
@@ -105,8 +106,9 @@ public class MainController {
         }
 
         try {
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(inputText);
+            // composition
+            Regex regexTool = new Regex(inputText, regex);
+            Matcher matcher = regexTool.matcher();
             resultListView.getItems().clear();
 
             boolean found = false;
@@ -137,7 +139,6 @@ public class MainController {
                 .filter(word -> !word.isEmpty())
                 .count();
         totalWordsCountLabel.setText(String.valueOf(totalWords));
-//        totalWordsCountLabel.setText(String.valueOf(totalWords));
     }
     private void updateUniqueWordsCount(String[] words) {
         // Update unique words count
